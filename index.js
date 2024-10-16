@@ -7,7 +7,7 @@ const anthropic = new Anthropic({
 });
 
 async function main() {
-  let { data: rawData, error } = await supabase.from("rawdata").select("raw_data,id,filtered");
+  let { data: rawData, error } = await supabase.from("case_details").select("raw_data,id,filtered");
 
   if (error) {
     console.error(error);
@@ -34,9 +34,10 @@ async function main() {
       });
 
       let response = JSON.stringify(message.content);
+      console.log("🚀 ~ main ~ response:", response)
 
       let { data, error } = await supabase
-        .from("rawdata")
+        .from("case_details")
         .update({
           filtered: response,
         })
