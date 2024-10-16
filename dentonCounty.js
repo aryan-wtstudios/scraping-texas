@@ -4,7 +4,7 @@ const RecaptchaPlugin = require("puppeteer-extra-plugin-recaptcha");
 const fs = require("node:fs");
 const {supabase} = require('./utils')
 
-let caseid = [ "F24-337J1"];
+let caseid = [ "E24-0118J5"];
 
 puppeteer
   .use(StealthPlugin())
@@ -40,10 +40,11 @@ puppeteer
         return document.querySelector(selector).getAttribute("href");
       }, caseLinkSelector);
       await page.goto(
-        `https://justice1.dentoncounty.gov/PublicAccess/${caseDetailUrl}`
+        `https://justice1.dentoncounty.gov/PublicAccess/${caseDetailUrl}`,{timeout: 60000}
       );
 
       await page.waitForNetworkIdle();
+      await page.screenshot({ path: `${id}_denton.png` });
 
       const allPageContent = await page.evaluate(() => {
         return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
@@ -56,7 +57,7 @@ puppeteer
       const pageContentString = JSON.stringify(allPageContent);
 
       const { data, error } = await supabase
-        .from('rawdata')
+        .from('case_details')
         .insert([
           { case_id: id, county: 'Denton', raw_data: pageContentString }
         ]);
