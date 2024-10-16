@@ -35,6 +35,9 @@ puppeteer
     await page.click('input[type="submit"][value="Submit"]');
     await page.waitForNavigation();
 
+    // take a screenshot of the page
+    
+
     // Use waitForSelector to ensure the element is loaded
     const selector =
       "#CasesGrid > table > tbody > tr.k-master-row > td.card-heading.party-case-caseid.owa-break-all a";
@@ -58,6 +61,7 @@ puppeteer
     // );
 
     await page.waitForNetworkIdle();
+    await page.screenshot({ path: "bexar.png" });
 
     const dynamicData = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
@@ -68,13 +72,25 @@ puppeteer
       }, {});
     });
     const htmlContent = JSON.stringify(dynamicData);
+
+    // Save case_id county and htmlContent in a csv file
+
+    const csvContent = `case_id,county,htmlContent\n${caseId},${county},${htmlContent}`;
+    fs.writeFile("bexar.csv", csvContent, (err) => {
+      if (err) {
+        console.error("Error writing to CSV file", err);
+      } else {
+        console.log("Successfully wrote data to bexar.csv");
+      }
+    });
+    
     
 
     
 
-    // Push the data to the supabase rawdata table
+    //Push the data to the supabase rawdata table
     const { data, error } = await supabase
-      .from('rawdata')
+      .from('case_details')
       .insert([
         { case_id: caseId, county: county, raw_data: htmlContent }
       ]);
