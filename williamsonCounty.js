@@ -4,7 +4,8 @@ const RecaptchaPlugin = require("puppeteer-extra-plugin-recaptcha");
 const fs = require("node:fs");
 const { supabase } = require("./utils");
 
-let case_id = ["1JC-24-0145", "1JC-24-0703", "2JE-24-0137"];
+let case_id = ["1JC-24-0145"];
+// , "1JC-24-0703", "2JE-24-0137"
 
 
 for (let i = 0; i < case_id.length; i++) {
@@ -44,6 +45,7 @@ puppeteer
     );
 
     await page.waitForNetworkIdle();
+    await page.screenshot({ path: `${case_id[i]}_williamson.png` });
     const allPageData = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
         if (el.offsetHeight > 0 && el.offsetWidth > 0) {
@@ -55,7 +57,7 @@ puppeteer
     const pageDataString = JSON.stringify(allPageData);
 
     const { data, error } = await supabase
-      .from('rawdata')
+      .from('case_details')
       .insert([
         { case_id: case_id[i], county: 'Williamson', raw_data: pageDataString }
       ]);
