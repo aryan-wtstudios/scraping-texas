@@ -4,7 +4,7 @@ const RecaptchaPlugin = require("puppeteer-extra-plugin-recaptcha");
 const { supabase } = require("./utils");
 
 
-const caseid = 248100073519;
+const caseid = 245100056641;
 
 puppeteer
   .use(StealthPlugin())
@@ -16,6 +16,7 @@ puppeteer
     );
 
     await page.waitForNetworkIdle();
+    await page.screenshot({ path: "harris.png" });
 
     const allPageData = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
@@ -28,7 +29,7 @@ puppeteer
     const pageDataString = JSON.stringify(allPageData);
 
     const { data, error } = await supabase
-      .from('rawdata')
+      .from('case_details')
       .insert([
         { case_id: caseid.toString(), county: 'Harris', raw_data: pageDataString }
       ]);
