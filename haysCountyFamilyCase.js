@@ -45,6 +45,7 @@ puppeteer
     );
 
     await page.waitForNetworkIdle();
+    await page.screenshot({ path: `${case_id[i]}_hays.png` });
     const allPageData = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
         if (el.offsetHeight > 0 && el.offsetWidth > 0) {
@@ -56,7 +57,7 @@ puppeteer
     const pageDataString = JSON.stringify(allPageData);
 
     const { data, error } = await supabase
-      .from('rawdata')
+      .from('case_details')
       .insert([
         { case_id: case_id[i], county: 'Hays', raw_data: pageDataString }
       ]);
