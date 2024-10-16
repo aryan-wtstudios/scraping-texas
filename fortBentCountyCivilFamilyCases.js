@@ -44,8 +44,10 @@ for (let i = 0; i < caseid.length; i++) {
       );
 
       await page.waitForNetworkIdle();
+      await page.screenshot({ path: `${caseid[i]}_fort_bent.png` });
 
       const allPageData = await page.evaluate(() => {
+        
         return Array.from(document.querySelectorAll('*')).reduce((acc, el) => {
           if (el.offsetHeight > 0 && el.offsetWidth > 0) {
             acc[el.tagName + (el.id ? '#' + el.id : '') + (el.className ? '.' + el.className.split(' ').join('.') : '')] = el.innerText;
@@ -56,7 +58,7 @@ for (let i = 0; i < caseid.length; i++) {
       const pageDataString = JSON.stringify(allPageData);
 
       const { data, error } = await supabase
-        .from('rawdata')
+        .from('case_details')
         .insert([
           { case_id: caseid[i], county: 'Fort Bend', raw_data: pageDataString }
         ]);
