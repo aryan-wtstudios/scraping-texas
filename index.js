@@ -3,7 +3,7 @@ const { Anthropic } = require("@anthropic-ai/sdk");
 
 const anthropic = new Anthropic({
   apiKey:
-    "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",
+    "",
 });
 
 async function main() {
