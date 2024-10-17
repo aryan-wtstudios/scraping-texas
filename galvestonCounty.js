@@ -58,7 +58,7 @@ puppeteer
     const pageDataString = JSON.stringify(allPageData);
 
     const { data, error } = await supabase
-      .from("rawdata")
+      .from("case_details")
       .insert([
         { case_id: caseids[i], county: "galveston", raw_data: pageDataString },
       ]);

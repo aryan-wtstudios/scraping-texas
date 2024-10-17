@@ -4,7 +4,8 @@ const RecaptchaPlugin = require("puppeteer-extra-plugin-recaptcha");
 const fs = require("node:fs");
 const { supabase } = require("./utils");
 
-let caseId = ["J4-CV-24-000987", "J5-CV-24-270839"];
+//let caseId = ["J4-CV-24-000987", "J5-CV-24-270839"];
+let caseId = ["J1-CV-23-005405"];
 
 for (let i = 0; i < caseId.length; i++) {
 
